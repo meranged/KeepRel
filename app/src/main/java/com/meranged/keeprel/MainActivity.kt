@@ -1,13 +1,30 @@
 package com.meranged.keeprel
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.provider.ContactsContract
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import biweekly.ICalendar
+import biweekly.component.VEvent
+import biweekly.io.text.ICalReader
+import com.meranged.keeprel.db.KRCalendar
+import com.meranged.keeprel.db.KREvent
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import java.io.InputStream
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,19 +34,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_CONTACTS
-            ) != PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+            != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
+            ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.READ_CONTACTS),
                 REQUEST_PERMISSION
             )
         } else {
-            getContacts()
+            //getContacts()
+            //chooseFile()
+            val intent = Intent(this, KRActivity::class.java).apply {
+                putExtra(EXTRA_MESSAGE, "test")
+            }
+            startActivity(intent)
         }
+    }
+
+    private fun chooseFile() {
+        val intent = Intent()
+            .setType("*/*")
+            .setAction(Intent.ACTION_GET_CONTENT)
+
+        startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
     }
 
     override fun onRequestPermissionsResult(
@@ -89,5 +117,35 @@ class MainActivity : AppCompatActivity() {
             contactsCursor.close()
         }
         return contactList
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 111 && resultCode == RESULT_OK) {
+            val selectedFile = data?.data //The uri with the location of the file
+            readCalendar(selectedFile)
+        }
+    }
+
+    fun readCalendar(afile: Uri?) {
+
+        val ical = readCalendarFromUri(afile)
+
+        val viewModelJob = Job()
+
+        val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+        uiScope.launch {
+            insertTheWholeCal(ical)
+        }
+    }
+
+    private suspend fun insertTheWholeCal(ical: ICalendar?){
+        withContext(Dispatchers.IO) {
+            if (ical != null){
+                App.database!!.dao.insertCalendarWithEvents(ical)
+            }
+        }
     }
 }

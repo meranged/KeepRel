@@ -8,11 +8,10 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [Calendar::class, Event::class],
+    entities = [KRCalendar::class, KREvent::class],
     version = 1,
     exportSchema = false
 )
-@TypeConverters(KRConverters::class)
 abstract class KRDatabase : RoomDatabase() {
 
     abstract val dao: KRDao

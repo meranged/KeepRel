@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "959690534601",
+    "firebase_url": "https://keeprel.firebaseio.com",
+    "project_id": "keeprel",
+    "storage_bucket": "keeprel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959690534601:android:3bce5cc0f55ac711812718",
+        "android_client_info": {
+          "package_name": "com.meranged.keeprel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959690534601-umlfs4l3v5uhgqqq9g6ifta4eceqlplu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.meranged.keeprel",
+            "certificate_hash": "2a6a881fe22ec298f612b067e18c9ab26c489de3"
+          }
+        },
+        {
+          "client_id": "959690534601-pg8jg3ksvq5o4cidq8jnmlonqckrni7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4WE2keVcDgv3tTZqeqmfrktlGKX6fLqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959690534601-pg8jg3ksvq5o4cidq8jnmlonqckrni7p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

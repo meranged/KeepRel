@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "calendar")
-data class Calendar(
+data class KRCalendar(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
 
@@ -13,17 +13,17 @@ data class Calendar(
     var name: String = "",
 
     @ColumnInfo(name = "locale")
-    var locale: String = "",
+    var locale: String? = "",
 
     @ColumnInfo(name = "description")
-    var description: String = "",
+    var description: String? = "",
 
     @ColumnInfo(name = "comment")
-    var comment: String = "",
+    var comment: String? = "",
 
     @ColumnInfo(name = "color")
-    var color: String = "",
+    var color: Int? = 0,
 
     @ColumnInfo(name = "person_id")
-    var person_id: Long = 0L
+    var person_id: Long? = 0L
 )
