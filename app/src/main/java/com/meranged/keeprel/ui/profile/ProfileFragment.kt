@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FirebaseFirestore
 import com.meranged.keeprel.R
 import com.meranged.keeprel.ui.slideshow.SlideshowViewModel
 import com.squareup.picasso.Picasso
@@ -93,6 +94,29 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun updateFireStore(acc: GoogleSignInAccount?){
+        if (acc != null){
+
+            Log.i("KeepR - FS1", acc.email)
+
+            val db = FirebaseFirestore.getInstance()
+            val user = HashMap<String, Any>()
+            user["name"] = acc.displayName!!
+            user["email"] = acc.email!!
+
+            db.collection("users")
+                .document(acc.email!!)
+                .set(user)
+                .addOnSuccessListener {
+                    // Успешная запись
+                }
+                .addOnFailureListener {
+                    // Произошла ошибка при записи
+                    Log.i("KeepR - FS", it.message)
+                }
+        }
+    }
+
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account =
@@ -129,6 +153,8 @@ class ProfileFragment : Fragment() {
             var a = acc.photoUrl
             uIV.setImageURI(null)
             Picasso.get().load(a).into(uIV)
+
+            updateFireStore(acc)
         } else {
             unTV.text = "Something went"
             ueTV.text = "wrong"

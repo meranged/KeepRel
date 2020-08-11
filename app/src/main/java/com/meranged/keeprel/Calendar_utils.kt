@@ -14,9 +14,9 @@ import java.util.*
 fun readCalendarFromUri(afile: Uri?): ICalendar?{
     if (afile != null) {
 
-        var ical: ICalendar?
+        val ical: ICalendar?
 
-        val fileInputStream: InputStream? = App.context!!.getContentResolver().openInputStream(afile)
+        val fileInputStream: InputStream? = App.context!!.contentResolver.openInputStream(afile)
 
         val reader = ICalReader(fileInputStream)
 
@@ -32,31 +32,31 @@ fun readCalendarFromUri(afile: Uri?): ICalendar?{
 
 fun getKRCalendarFromICalendar(cal: ICalendar): KRCalendar {
 
-    var kr_cal = KRCalendar()
+    val krCal = KRCalendar()
 
-    var cal_name: String?
-    var cal_desc: String?
+    var calName: String?
+    var calDesc: String?
 
     try {
-        cal_name = cal.getExperimentalProperty("X-WR-CALNAME").value
+        calName = cal.getExperimentalProperty("X-WR-CALNAME").value
     } catch (e: Exception){
         val sdf = SimpleDateFormat("ddMyyyyhhmmss")
         val currentDate = sdf.format(Date())
-        cal_name = "Calendar" + currentDate
+        calName = "Calendar$currentDate"
     }
 
     try {
-        cal_desc = cal.getExperimentalProperty("X-WR-CALDESC").value
+        calDesc = cal.getExperimentalProperty("X-WR-CALDESC").value
     } catch (e: Exception){
-        cal_desc = ""
+        calDesc = ""
     }
 
-    kr_cal.name = cal_name!!
-    kr_cal.description = cal_desc
+    krCal.name = calName!!
+    krCal.description = calDesc
 
-    kr_cal.locale = Locale.getDefault().displayLanguage
+    krCal.locale = Locale.getDefault().displayLanguage
 
-    return kr_cal
+    return krCal
 }
 
 fun insertKRCalendar(ical: KRCalendar): KRCalendar {
@@ -66,34 +66,34 @@ fun insertKRCalendar(ical: KRCalendar): KRCalendar {
 }
 
 fun getKREventFromVEvent(ev: VEvent): KREvent {
-    var kr_event = KREvent()
+    val krEvent = KREvent()
 
-    var dateStart = GregorianCalendar.getInstance()
-    var dateEnd = GregorianCalendar.getInstance()
-    dateStart.setTime(ev.dateStart.value)
+    val dateStart = GregorianCalendar.getInstance()
+    val dateEnd = GregorianCalendar.getInstance()
+    dateStart.time = ev.dateStart.value
 
     if (ev.dateEnd != null)
-        dateEnd.setTime(ev.dateEnd.value)
+        dateEnd.time = ev.dateEnd.value
 
     dateStart.set(Calendar.HOUR, 0)
     dateStart.set(Calendar.MINUTE, 0)
     dateStart.set(Calendar.SECOND, 0)
 
-    kr_event.date_start = dateStart.timeInMillis
+    krEvent.date_start = dateStart.timeInMillis
 
     //check if we deal with 1 day event
     if (ev.dateEnd == null) {
-        kr_event.date_end = 0
+        krEvent.date_end = 0
     } else {
-        dateEnd.setTime(ev.dateEnd.value)
+        dateEnd.time = ev.dateEnd.value
 
         if ((dateStart == dateEnd) or (dateStart.after(dateEnd))) {
-            kr_event.date_end = 0
+            krEvent.date_end = 0
         } else {
             if ((dateStart.get(Calendar.DAY_OF_MONTH) == dateEnd.get(Calendar.DAY_OF_MONTH))
                 && (dateStart.get(Calendar.YEAR) == dateEnd.get(Calendar.YEAR))
                 && (dateStart.get(Calendar.MONTH) == dateEnd.get(Calendar.MONTH))){
-                kr_event.date_end = 0
+                krEvent.date_end = 0
             } else {
                 dateStart.add(Calendar.DAY_OF_MONTH, 1)
 
@@ -101,24 +101,24 @@ fun getKREventFromVEvent(ev: VEvent): KREvent {
                             && (dateStart.get(Calendar.YEAR) == dateEnd.get(Calendar.YEAR))
                             && (dateStart.get(Calendar.MONTH) == dateEnd.get(Calendar.MONTH)))
                     && (dateEnd.get(Calendar.HOUR_OF_DAY) < 2)){
-                    kr_event.date_end = 0
+                    krEvent.date_end = 0
                 } else {
 
                     dateEnd.set(Calendar.HOUR, 0)
                     dateEnd.set(Calendar.MINUTE, 0)
                     dateEnd.set(Calendar.SECOND, 0)
 
-                    kr_event.date_end = dateEnd.timeInMillis
+                    krEvent.date_end = dateEnd.timeInMillis
                 }
             }
         }
     }
 
-    kr_event.title = ev.summary.value
-    kr_event.description = ev.description.value
-    kr_event.uid = ev.uid.value
+    krEvent.title = ev.summary.value
+    krEvent.description = ev.description.value
+    krEvent.uid = ev.uid.value
 
-    return kr_event
+    return krEvent
 }
 
 fun printKREvents(ev: ArrayList<KREvent>){

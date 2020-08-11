@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 
@@ -71,24 +72,25 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun updateUI(acc: GoogleSignInAccount?){
-        var accImage = findViewById<ImageView>(R.id.accImageView)
-        var accName = findViewById<TextView>(R.id.accNameTV)
-        var accMail = findViewById<TextView>(R.id.accMailTV)
+    private fun updateUI(acc: GoogleSignInAccount?){
+        val accImage = findViewById<ImageView>(R.id.accImageView)
+        val accName = findViewById<TextView>(R.id.accNameTV)
+        val accMail = findViewById<TextView>(R.id.accMailTV)
 
         if (acc != null) {
             accName.text = acc.displayName
             accMail.text = acc.email
-            var a = acc.photoUrl
+            val a = acc.photoUrl
             accImage.setImageURI(null)
             Picasso.get().load(a).into(accImage)
-
 
         } else {
             accName.text = "Что-то пошло"
             accMail.text = "Не так"
         }
     }
+
+
 
     private fun signOut() {
         mGoogleSignInClient?.signOut()
