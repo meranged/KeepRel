@@ -101,7 +101,12 @@ class ProfileFragment : Fragment() {
 
             val db = FirebaseFirestore.getInstance()
             val user = HashMap<String, Any>()
-            user["name"] = acc.displayName!!
+
+            if (acc.displayName != null) {
+                user["name"] = acc.displayName!!
+            } else {
+                user["name"] = ""
+            }
             user["email"] = acc.email!!
 
             db.collection("users")
@@ -127,7 +132,7 @@ class ProfileFragment : Fragment() {
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.i("KRTest", "signInResult:failed code=" + e.statusCode)
+            Log.i("KRTest", "signInResult:failed code=" + e.statusCode + ' ' + e.localizedMessage)
             updateUI(null)
         }
     }

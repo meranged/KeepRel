@@ -1,5 +1,6 @@
 package com.meranged.keeprel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.meranged.keeprel.db.KRDatabase

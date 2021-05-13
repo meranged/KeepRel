@@ -37,10 +37,7 @@ class SignInActivity : AppCompatActivity() {
         reconnectButton.setOnClickListener {
             reconnect()
         }
-
         reconnect()
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,7 +120,4 @@ class SignInActivity : AppCompatActivity() {
             updateUI(account)
         }
     }
-
-
-
 }
