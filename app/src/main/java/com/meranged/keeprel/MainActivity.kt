@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if ((requestCode == REQUEST_PERMISSION)) {
             getContacts()
         }
@@ -110,7 +111,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            contactsCursor.close()
+
+            contactsCursor?.close()
+
         }
         return contactList
     }

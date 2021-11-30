@@ -97,7 +97,7 @@ class ProfileFragment : Fragment() {
     private fun updateFireStore(acc: GoogleSignInAccount?){
         if (acc != null){
 
-            Log.i("KeepR - FS1", acc.email)
+            Log.i("KeepR - FS1", acc.email!!)
 
             val db = FirebaseFirestore.getInstance()
             val user = HashMap<String, Any>()
@@ -117,7 +117,7 @@ class ProfileFragment : Fragment() {
                 }
                 .addOnFailureListener {
                     // Произошла ошибка при записи
-                    Log.i("KeepR - FS", it.message)
+                    Log.i("KeepR - FS", it.message!!)
                 }
         }
     }

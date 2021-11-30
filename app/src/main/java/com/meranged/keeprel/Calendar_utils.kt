@@ -134,7 +134,9 @@ fun printKREvents(ev: ArrayList<KREvent>){
             } else {
                 dateEndStr = ""
             }
-            Log.i("KRLog, EndDate: ", dateEndStr)
+            if (dateEndStr != null) {
+                Log.i("KRLog, EndDate: ", dateEndStr)
+            }
         }
     }
 }
